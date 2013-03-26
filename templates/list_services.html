@@ -1,0 +1,24 @@
+<html>
+	<body>
+		<h2>List of services</h2>
+		<ul>
+			{% for id, properties in services %}
+			<li><a href="{{ url_for('show_service', sid=id) }}">{{ properties.url }}</a></li>
+			{% endfor %}
+		</ul>
+		<h2>Add new service</h2>
+		<form action="{{ url_for('add_service') }}" method="POST">
+		<table>
+			{% for field in SERVICE_FIELDS %}
+			<tr>
+				<th><label for="{{ field.name }}">{{ field.label }}:</label></th>
+				<td><input type="text" name="{{ field.name }}" id="{{ field.id }}" /></td>
+			</tr>
+			{% endfor %}
+			<tr>
+				<th colspan="2"><input type="submit" value="Add service" /></th>
+			</tr>
+		</table>
+		</form>
+	</body>
+</html>

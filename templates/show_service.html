@@ -1,0 +1,74 @@
+{% macro type_input(types, type_obj, postfix='') -%}
+			{% set typename, prefix = type_obj.type %}
+			<tr>
+				<td align="right">{{ type_obj.name }} ({{ typename }}) =</td>
+				<td>
+				{% if prefix == 'http://www.w3.org/2001/XMLSchema' %}
+					{% if typename == 'string' %}
+						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}" />
+					{% elif typename in ('long', 'byte', 'double') %}
+						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}"
+							value="0" />
+					{% elif typename == 'dateTime' %}
+						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}"
+							value="{{ ISO_DATESTR }}" />
+					{% elif typename == 'boolean' %}
+						<select name="{{ type_obj.name }}__string{{ postfix }}">
+							<option>true</option>
+							<option>false</option>
+						</select>
+					{% endif %}
+				{% else %}
+					{% set obj = factory.create('{' + prefix + '}' + typename) %}
+					{% if obj.__metadata__.sxtype %}
+						{% for t in types %}
+							{% if t[0].name == typename %}
+								<table>
+								{% for child_type in t[0].children() %}
+								{{ type_input(types, child_type[0], '__' + type_obj.name +
+									'__{' + prefix + '}' + typename + '__complex') }}
+								{% else %}
+									<tr><td>unresolved type: {{ '{' + prefix + '}' }}{{ typename }}</td></tr>
+								{% endfor %}
+								</table>
+							{% endif %}
+						{% endfor %}
+					{% else %}
+						<select name="{{ type_obj.name }}__{{ '{' + prefix + '}' + typename }}__enum{{ postfix }}">
+						{% for value, _ in obj %}
+							<option>{{ value }}</option>
+						{% endfor %}
+						</select>
+					{% endif %}
+				{% endif %}
+				</td>
+			</tr>
+{%- endmacro %}
+<html>
+	<head>
+		{% for i in ("jquery.min", "show_service") %}
+		<script type="text/javascript" src="{{ url_for('static', filename=i + '.js') }}"></script>
+		{% endfor %}
+	<body>
+		<h2>List of methods</h2>
+		{% for definition in sd %}
+		{% for port in definition.ports %}
+		{% for op_name, op_params in port[1] %}
+		<form action="{{ url_for('invoke_service', op_name=op_name, sid=sid) }}"
+			method="get" id="form{{ loop.index }}" target="iframe{{ loop.index }}">
+		<table id="table{{ loop.index }}">
+			<tr>
+				<td><b>{{ op_name }}</b></td>
+			</tr>
+			{% for _, p_type in op_params %}
+			{{ type_input(definition.types, p_type) }}
+			{% endfor %}
+			<tr><td></td><td><input type="submit" value="Invoke method" /></td></tr>
+			<tr><td colspan="2"><iframe id="iframe{{ loop.index }}" name="iframe{{ loop.index }}" class="results" width="960" height="400"></iframe></td></tr>
+		</table>
+		</form>
+		{% endfor %}
+		{% endfor %}
+		{% endfor %}
+	</body>
+</html>
