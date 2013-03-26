@@ -1,5 +1,5 @@
-Web Service Facade
-==================
+Web Services Facade
+===================
 
 Web Services Facade creates a web-based frontend to invoke SOAP web services
 using simple GET requests, making it possible to test such services either
