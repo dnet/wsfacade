@@ -113,10 +113,10 @@ def process_formdata(callback, formdata, client):
 			if name not in ignore_complex:
 				ignore_complex.add(name)
 				data = client.factory.create(datatype)
-				postfix_len = 2 + len(name) + 2 + len(datatype) + 9
+				postfix = '__' + name + '__' + datatype + '__complex'
+				postfix_len = len(postfix)
 				process_formdata(data.__setattr__, {k[:-postfix_len]: v
-					for k, v in formdata.iteritems()
-					if k.endswith('__' + name + '__' + datatype + '__complex')},
+					for k, v in formdata.iteritems() if k.endswith(postfix)},
 					client)
 				callback(name, data)
 
