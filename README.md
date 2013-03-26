@@ -13,6 +13,6 @@ The whole project is available under MIT license.
 Dependencies
 ------------
 
- - Python 2.x (tested on 2.7.3)
+ - Python 2.7 (tested on 2.7.3)
  - SUDS (Debian/Ubuntu package: `python-suds`)
  - Flask (Debian/Ubuntu package: `python-flask`)
