@@ -99,16 +99,17 @@ def invoke_service(sid, op_name):
 def process_formdata(callback, formdata, client):
 	ignore_complex = set()
 	for key, value in formdata.iteritems():
-		if key.endswith('__string'):
-			callback(key[:-8], value)
-		elif key.endswith('__enum'):
-			name, datatype, _ = key.rsplit('__', 2)
+		payload, datatype = key.rsplit('__', 1)
+		if datatype == 'string':
+			callback(payload, value)
+		elif datatype == 'enum':
+			name, datatype = payload.rsplit('__', 1)
 			try:
 				callback(name, getattr(client.factory.create(datatype), value))
 			except AttributeError:
 				pass
-		elif key.endswith('__complex'):
-			_, name, datatype, _ = key.rsplit('__', 3)
+		elif datatype == 'complex':
+			_, name, datatype = payload.rsplit('__', 2)
 			if name not in ignore_complex:
 				ignore_complex.add(name)
 				data = client.factory.create(datatype)
