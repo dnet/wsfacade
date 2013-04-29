@@ -6,7 +6,7 @@
 				{% if prefix == 'http://www.w3.org/2001/XMLSchema' %}
 					{% if typename == 'string' %}
 						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}" />
-					{% elif typename in ('long', 'byte', 'double') %}
+					{% elif typename in ('long', 'byte', 'double', 'integer') %}
 						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}"
 							value="0" />
 					{% elif typename == 'dateTime' %}
