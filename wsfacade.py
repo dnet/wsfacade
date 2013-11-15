@@ -31,11 +31,13 @@ from suds.client import Client
 from suds.plugin import MessagePlugin
 from contextlib import closing
 from datetime import datetime
+from clientssl import HTTPSClientCertTransport
 import sqlite3, json
 
 SERVICE_FIELDS = (
 		{'name': 'url', 'label': 'WSDL URL (can be file:// too)', 'required': True},
 		{'name': 'location', 'label': 'Location (overrides the one in the WSDL)'},
+		{'name': 'clientcert', 'label': 'Client certificate + key (PEM)'},
 		{'name': 'username', 'label': 'Username for HTTP basic auth (optional)'},
 		{'name': 'password', 'label': 'Password for HTTP basic auth (optional)'})
 
@@ -135,6 +137,10 @@ def get_service_client(sid, **kwargs):
 		cursor = conn.execute('SELECT properties FROM services WHERE id = ?', (sid,))
 		((properties,),) = cursor.fetchall()
 		c_kwargs = json.loads(properties)
+		cc = c_kwargs.get('clientcert')
+		if cc is not None:
+		    c_kwargs['transport'] = HTTPSClientCertTransport(cc)
+		    del c_kwargs['clientcert']
 		c_kwargs.update(kwargs)
 		return Client(**c_kwargs)
 

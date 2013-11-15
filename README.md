@@ -8,7 +8,8 @@ manually or using automatized scanners such as Burp Suite or sqlmap.
 License
 -------
 
-The whole project is available under MIT license.
+Client SSL glue code is from nitwit, with no license provided.
+The rest of the project is available under MIT license.
 
 Dependencies
 ------------
