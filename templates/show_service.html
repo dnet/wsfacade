@@ -4,6 +4,10 @@
 			{% else %}
 			{% set typename, prefix = type_obj.type %}
 			{% endif %}
+			{% set resolved = type_obj.resolve() %}
+			{% if prefix != 'http://www.w3.org/2001/XMLSchema' and resolved.rawchildren and resolved.rawchildren[0].root.name == "restriction" %}
+			{% set typename, prefix = resolved.rawchildren[0].ref %}
+			{% endif %}
 			<tr>
 				<td align="right">{{ type_obj.name }} ({{ typename }}) =</td>
 				<td>
