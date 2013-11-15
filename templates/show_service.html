@@ -30,7 +30,7 @@
 								<table>
 								{% for child_type in t[0].children() %}
 								{{ type_input(types, child_type[0], '__' + type_obj.name +
-									'__{' + prefix + '}' + typename + '__complex') }}
+									'__{' + prefix + '}' + typename + '__complex' + postfix) }}
 								{% else %}
 									<tr><td>unresolved type: {{ '{' + prefix + '}' }}{{ typename }}</td></tr>
 								{% endfor %}
