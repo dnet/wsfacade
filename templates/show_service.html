@@ -12,7 +12,7 @@
 				<td align="right">{{ type_obj.name }} ({{ typename }}) =</td>
 				<td>
 				{% if prefix == 'http://www.w3.org/2001/XMLSchema' %}
-					{% if typename == 'string' %}
+					{% if typename == 'string' or typename == 'anyType' %}
 						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}" />
 					{% elif typename in ('long', 'byte', 'double', 'integer', 'int') %}
 						<input type="text" name="{{ type_obj.name }}__string{{ postfix }}"
